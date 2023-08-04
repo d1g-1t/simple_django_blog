@@ -16,13 +16,12 @@ from blogicum.settings import PAGINATOR_VALUE
 
 def index(request):
     template = 'blog/index.html'
-    post_list = Post.objects.published_posts().select_related(
-        'category',
-        'location',
-        'author'
-        ).annotate(comment_count=Count('comments')
-                   ).order_by('-pub_date')
-
+    post_list = (
+        Post.objects.published_posts()
+        .select_related('category', 'location', 'author')
+        .annotate(comment_count=Count('comments'))
+        .order_by('-pub_date')
+    )
     paginator = Paginator(post_list, PAGINATOR_VALUE)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -119,7 +118,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         return reverse(
             'blog:post_detail',
             kwargs={'id': self.kwargs.get('pk')}
-            )
+        )
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
@@ -156,7 +155,7 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         return reverse(
             'blog:post_detail',
             kwargs={'id': self.kwargs.get('pk')}
-            )
+        )
 
 
 class CommentUpdateView(LoginRequiredMixin, UpdateView):
@@ -180,7 +179,7 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
         return reverse(
             'blog:post_detail',
             kwargs={'id': self.kwargs.get('post_id')}
-            )
+        )
 
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
