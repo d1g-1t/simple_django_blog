@@ -106,12 +106,13 @@ class Comment(models.Model):
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
-        related_name='comment'
+        related_name='comments'
     )
     create_time = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         User,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='comments'
     )
 
     class Meta:
