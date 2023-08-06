@@ -6,7 +6,19 @@ from blog.managers import PublishedPostManager
 User = get_user_model()
 
 
-class Category(models.Model):
+class AbstractPostModel(models.Model):
+    is_published = models.BooleanField(
+        'Опубликовано',
+        default=True,
+        help_text='Снимите галочку, чтобы скрыть публикацию.'
+    )
+    created_at = models.DateTimeField('Добавлено', auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+
+class Category(AbstractPostModel):
     title = models.CharField(max_length=256, verbose_name='Заголовок')
     description = models.TextField(verbose_name='Описание')
     slug = models.SlugField(
@@ -17,12 +29,6 @@ class Category(models.Model):
             'разрешены символы латиницы, цифры, дефис и подчёркивание.'
         )
     )
-    is_published = models.BooleanField(
-        'Опубликовано',
-        default=True,
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
-    created_at = models.DateTimeField('Добавлено', auto_now_add=True)
 
     def __str__(self):
         return self.title
@@ -32,17 +38,11 @@ class Category(models.Model):
         verbose_name_plural = 'Категории'
 
 
-class Location(models.Model):
+class Location(AbstractPostModel):
     name = models.CharField(
         max_length=256,
         verbose_name='Название места'
     )
-    is_published = models.BooleanField(
-        'Опубликовано',
-        default=True,
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
-    created_at = models.DateTimeField('Добавлено', auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -52,7 +52,7 @@ class Location(models.Model):
         verbose_name_plural = 'Местоположения'
 
 
-class Post(models.Model):
+class Post(AbstractPostModel):
     title = models.CharField(max_length=256, verbose_name='Заголовок')
     text = models.TextField(verbose_name='Текст')
     pub_date = models.DateTimeField(
@@ -82,12 +82,6 @@ class Post(models.Model):
         verbose_name='Категория',
         related_name='posts'
     )
-    is_published = models.BooleanField(
-        'Опубликовано',
-        default=True,
-        help_text='Снимите галочку, чтобы скрыть публикацию.'
-    )
-    created_at = models.DateTimeField('Добавлено', auto_now_add=True)
 
     objects = PublishedPostManager()
 
@@ -114,6 +108,9 @@ class Comment(models.Model):
         on_delete=models.CASCADE,
         related_name='comments'
     )
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         ordering = ('create_time',)
