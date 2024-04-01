@@ -50,7 +50,15 @@ pip install -r requirements.txt
 ```
 python manage.py migrate
 ```
-3.7. Запускаем локальный сервер:
+3.7. Опционально. Загружаем данные из фикстур для тестового наполнения сайта. Из папки /blogicum/ запускаем:
+```
+python manage.py loaddata db.json
+```
+Вывод команды при корректной работе команды:
+```
+Installed 173 object(s) from 1 fixture(s)
+```
+3.8. Запускаем локальный сервер:
 ```
 python manage.py runserver
 ```
