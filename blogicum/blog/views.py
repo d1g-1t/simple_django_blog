@@ -15,6 +15,9 @@ from blogicum.settings import PAGINATOR_VALUE
 
 
 def index(request):
+    """
+    Функция для отображения главной страницы
+    """
     template = 'blog/index.html'
     post_list = (
         Post.objects.published_posts()
@@ -30,6 +33,9 @@ def index(request):
 
 
 def post_detail(request, id):
+    """
+    Функция для отображения поста
+    """
     template = 'blog/detail.html'
     post = get_object_or_404(Post.objects.all(), pk=id)
     if not post.is_published and request.user != post.author:
@@ -43,6 +49,9 @@ def post_detail(request, id):
 
 
 def category_posts(request, category_slug):
+    """
+    Функция для отображения постов по категориям
+    """
     template = 'blog/category.html'
     category = get_object_or_404(Category,
                                  slug=category_slug,
@@ -57,6 +66,9 @@ def category_posts(request, category_slug):
 
 
 def user_profile(request, user_name):
+    """
+    Функция для отображения профиля пользователя
+    """
     template = 'blog/profile.html'
     user = get_object_or_404(User, username=user_name)
     post_list = Post.objects.filter(
@@ -73,6 +85,9 @@ def user_profile(request, user_name):
 
 @login_required
 def edit_profile(request, user_name):
+    """
+    Функция для редактирования профиля пользователя
+    """
     user = get_object_or_404(User, username=user_name)
     form = UserForm(request.POST or None, instance=user)
     context = {'form': form}
@@ -82,6 +97,9 @@ def edit_profile(request, user_name):
 
 
 class CreatePostView(LoginRequiredMixin, CreateView):
+    """
+    Класс для создания поста
+    """
     model = Post
     form_class = PostForm
     template_name = 'blog/create.html'
@@ -94,6 +112,9 @@ class CreatePostView(LoginRequiredMixin, CreateView):
 
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
+    """
+    Класс для редактирования поста
+    """
     model = Post
     form_class = PostForm
     template_name = 'blog/create.html'
@@ -122,6 +143,9 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    Класс для удаления поста
+    """
     model = Post
     template_name = 'blog/create.html'
     success_url = reverse_lazy('blog:index')
@@ -141,6 +165,9 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
+    """
+    Класс для создания комментария
+    """
     model = Comment
     form_class = CommentForm
     template_name = 'blog/comment.html'
@@ -159,6 +186,9 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
 
 class CommentUpdateView(LoginRequiredMixin, UpdateView):
+    """
+    Класс для редактирования комментария
+    """
     model = Comment
     form_class = CommentForm
     template_name = 'blog/comment.html'
@@ -183,6 +213,9 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    """
+    Класс для удаления комментария
+    """
     model = Comment
     template_name = 'blog/comment.html'
     success_url = reverse_lazy('blog:index')
